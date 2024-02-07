@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    input { padding:0px 2px}
+    body { font-family:Calibri; padding: 0; margin: 0;background-color:black;font-size: 18px;}
+    .links {text-decoration:underline;cursor:pointer;padding:0px 2px 0px 2px; border-style:solid; border-style:black; border-width: 0px 0px 0px 0px;}
+    button:hover {background-color:#c0c0c0;cursor:pointer}
+    button {background-color:white;cursor:pointer}
+    .littlebutton {line-height:0.6;user-select:none;cursor:pointer;font-size: 12px;padding:0px; color:white;}
+    .mainbutton {line-height:0.6;user-select:none;cursor:pointer;font-size: 18px;margin:0px;padding:0px; color:black;}
+    .joinbutton {line-height:0.6;user-select:none;cursor:pointer;font-size: 18px;margin:0px;padding:0px; color:white;}
+    .treetable td {max-width:80px;overflow:hidden;text-overflow: ellipsis;}
+    .vrbutton {pointer:cursor;position:absolute;z-index:999999;padding:6px;text-align:center;background-color:#c0c0c0;width:78px;border:2px solid white;border-radius:4px}
+    h5 { font-family:Calibri; font-size: 12px;color:black; }
+  </style>
+  <title>IceCube Simulator</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width initial-scale=1.00, user-scalable=no">
+  <meta names="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="icon"  type="image/png" sizes="96x96" href="meta.png">
+  <link rel="apple-touch-icon" href="meta.png">
+</head>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="three.min.js"></script>
+<script src="latestorbitcontrols.js"></script>
+<script src="OrbitControls.js"></script>
+<script src="wakelock.js"></script>
+<script src="icecube.js"></script>
+
+<body onload="loaddone()" onresize="resize()"; style="margin:0px;padding:0px;overflow:hidden">
+
+<div id="explorecanvas" style="position:absolute;left:0px;top:0px;margin:0"></div>
+<div id="explorecanvas3d" style="z-index:-999999;position:absolute;left:0px;top:0px;height:200px"></div>
+
+<div id="wakewindow" style="border:2px solid black;padding:40px 40px;display:none;z-index:1999999;position:absolute;top:20px;left:40px;background-image:url('images/vrheadset.jpg');background-size:auto 100%;border-radius:12px;">
+<center>
+	
+	
+	<p><span id="deviceorientation"></span></p>
+
+	<button style="border:2px solid black;padding:0px 20px;border-radius:6px" id="wakebutton" onclick="enablewake()" data-status="off"><h1>Enable VR headset</h1></button>
+	<p><button style="border:2px solid black;padding:0px 20px;border-radius:6px" onclick="document.getElementById('wakewindow').style.display='none'"><h1>Normal Display</h1></button>
+</div>
+
+<div id="buttonleft" class="vrbutton" style="top:2px;right:2px;display:none">Look</div>
+<div id="buttonright" class="vrbutton" style="top:2px;right:98px;display:none">Walk</div>
+<div id="dashboarddisplayoff" style="z-index:999999;display:none;position:absolute; left:0px; top:0px;">
+  <div style="font-size:24px;width:100%;background-color:black;color:white;"><div style="font-size:20px;cursor:pointer;padding:2px;" onclick="dashboarddisplayon();">►<span id="maskerror" style="font-size:12px;"></span>&nbsp;<span id='icecubeinfo'></span></div></div>
+</div>
+	
+
+<div id="dashboarddisplay" style="background-color:black;color:white;font-size:24px;z-index:999999;display:inline;position:absolute; left:0px; top:0px;max-width:260px;width:260px;max-height:100vh;overflow:auto;padding:8px;text-align:center;">	
+<table cellspacing=0 cellpadding=0 width=100% border=0><tr><td style="width:100%;">
+<div style="font-size:20px;float:right;cursor:pointer" onclick="dashboarddisplayoff();">◄</div>
+     <nobr>&nbsp;Neutrino Detector&nbsp;&nbsp;</nobr><br>
+    <div style="height:4px"></div><center>
+      <table cellspacing=0px cellpadding=6px border=0 style="border-radius:8px;background-color:white;line-height:1.0;width:240px;">
+	<tr align=left style="font-size: 18px;color:black;"><td>&nbsp;<span id="scaledisplay" style="font-size: 12px;">No scale selected</span></td>
+	  <td align=right valign=top><span class=mainbutton style="display:inline" onclick="eventqueryshow()"><u>Events</u></span>&nbsp;&nbsp;<span class=mainbutton onclick="talkicecube()"><u>Help</u></span>&nbsp;&nbsp;</td></tr>
+     </table>
+
+     <div id="eventcover" style="display:none">
+	<p><span id="eventactivity"></span><p>
+	<p>One moment please ...<p>
+     </div>
+     <div id="eventquerydisplay" style="display:none">
+     <div style='height:1px'></div>
+      <table cellspacing=4px cellpadding=0px border=0 style="border-radius:8px;background-color:white;width:240px;font-size: 12px;color:black;text-align:center">
+	<tr><td height=6></td></tr>
+	<tr><td>Valid EventID Number</td></tr>
+	<tr><td><input type=number value="13670" id="eventwanted" style="width:80px;">&nbsp;<input type="checkbox" id="auxiliary" title="Check for all, uncheck for auxiliary=false only">&nbsp;Auxiliary</td></tr>
+	<tr><td height=0></td></tr>
+	<tr><td><span class=mainbutton onclick="eventqueryget()"><u>Get Event</u></span></td></tr>
+	<tr><td height=2></td></tr>
+      </table>
+     <div style='height:1px'></div>
+      <table cellspacing=4px cellpadding=0px border=0 style="border-radius:8px;background-color:white;width:240px;font-size: 12px;color:black;text-align:center">
+	<tr><td height=6></td></tr>
+	<tr><td colspan=2>Search pulse index range<br>(150000-20000 are the biggest)</td></tr>
+	<tr><td><input type=number value="150000" id="eventsearchlow" style="width:80px;"></td><td><input type=number value="200000" id="eventsearchhigh" style="width:80px;"></td></tr>
+	<tr><td>Low</td><td>High</td></tr>
+	<tr><td height=0></td></tr>
+	<tr><td colspan=2><span class=mainbutton onclick="eventsearch()"><u>Search Events</u></span></td></tr>
+	<tr><td colspan=2><div id="eventsearchdisplay" style="overflow:auto;max-height:240px"></div></td></tr>
+	<tr><td height=6></td></tr>
+      </table>
+     <div style='height:1px'></div>
+     <div style='height:1px'></div>
+      <table cellspacing=4px cellpadding=0px border=0 style="border-radius:8px;background-color:white;width:240px;font-size: 12px;color:black;text-align:center">
+	<tr><td height=6></td></tr>
+	<tr><td colspan=4>Test and sample events, click to view</td></tr>
+	<tr align=center style="font-size: 12px;">
+	  <td>Test</td>
+	  <td><span class=mainbutton onclick="icecubetestget('2092')" style="font-size: 12px;"><u>#1-2092</u></span></td>
+	  <td><span class=mainbutton onclick="icecubetestget('7344')" style="font-size: 12px;"><u>#2-7344</u></span></td>
+	  <td><span class=mainbutton onclick="icecubetestget('9482')" style="font-size: 12px;"><u>#3-9482</u></span></td>
+	</tr>
+	<tr align=center style="font-size: 12px;">
+	  <td>Hugh</td>
+	  <td><span class=mainbutton onclick="icecubeget('333339210')" style="font-size: 12px;"><u>Neutrino</u></span></td>
+	  <td><span class=mainbutton onclick="icecubeget('509612375')" style="font-size: 12px;"><u>Muon</u></span></td>
+	  <td><span class=mainbutton onclick="icecubeget('41185938')" style="font-size: 12px;"><u>Unknown</u></span></td>
+	</tr>
+	<tr align=center style="font-size: 12px;">
+	  <td>Large</td>
+	  <td><span class=mainbutton onclick="icecubeget('12151')" style="font-size: 12px;"><u>12151</u></span></td>
+	  <td><span class=mainbutton onclick="icecubeget('13670')" style="font-size: 12px;"><u>13670</u></span></td>
+	  <td><span class=mainbutton onclick="icecubeget('7073')" style="font-size: 12px;"><u>7073</u></span></td>
+	</tr>
+	<tr align=center style="font-size: 12px;">
+	<tr align=center style="font-size: 12px;">
+	  <td>>Mid</td>
+	  <td><span class=mainbutton onclick="icecubeget('1499')" style="font-size: 12px;"><u>1499</u></span></td>
+	  <td><span class=mainbutton onclick="icecubeget('1091')" style="font-size: 12px;"><u>1091</u></span></td>
+	  <td><span class=mainbutton onclick="icecubeget('2395')" style="font-size: 12px;"><u>2395</u></span></td>
+	</tr>
+	<tr align=center style="font-size: 12px;">
+	  <td>Small</td>
+	  <td><span class=mainbutton onclick="icecubeget('997')" style="font-size: 12px;"><u>997</u></span></td>
+	  <td><span class=mainbutton onclick="icecubeget('1095')" style="font-size: 12px;"><u>1095</u></span></td>
+	  <td><span class=mainbutton onclick="icecubeget('1508')" style="font-size: 12px;"><u>1508</u></span></td>
+	</tr>
+	<tr align=center style="font-size: 12px;">
+	  <td>Other</td>
+	  <td><span class=mainbutton onclick="icecubeget('1799490')" style="font-size: 12px;"><u>#1799490</u></span></td>
+	  <td><span class=mainbutton onclick="icecubeget('2351046')" style="font-size: 12px;"><u>#2351046</u></span></td>
+	  <td></td>
+	</tr>
+	<tr><td height=6></td></tr>
+	<tr><td height=6></td></tr>
+      </table>
+     <div style='height:1px'></div>
+      <table cellspacing=4px cellpadding=0px border=0 style="border-radius:8px;background-color:white;width:240px;font-size: 12px;color:black;text-align:center">
+	<tr><td height=0></td></tr>
+	<tr><td colspan=6 align=center><span class=mainbutton onclick="eventquerycancel()"><u>Cancel</u></span></td></tr>
+      </table>
+     </div>
+     <div style='height:1px'></div>
+
+     <div id="eventinfodisplay">
+      <table cellspacing=0px cellpadding=0px border=0 style="border-radius:8px;background-color:white;width:240px;">
+	<tr><td height=4></td></tr>
+	<tr align=center style="font-size: 8px;color:black;">
+	  <td>EventID</td>
+	  <td>Azimuth</td>
+	  <td>Zenith</td>
+	</tr>
+	<tr align=center style="font-size: 8px;color:black;">
+	  <td valign=top><span id="eventid" style="font-size: 16px;">1128590</span></td>
+	  <td><span id="azimuth" style="font-size: 16px;">347.1</span>°</td>
+	  <td><span id="zenith" style="font-size: 16px;">119.3</span>°</td>
+	</tr>
+	<tr><td height=2></td></tr>
+	<tr align=center style="font-size: 8px;color:black;">
+	  <td>StartTime</td>
+	  <td>EndTime</td>
+	  <td>StepTime</td>
+	</tr>
+	<tr align=center style="font-size: 8px;color:black;">
+	  <td><input type=number value="1" id="starttime" style="width:54px;"></td>
+	  <td><input type=number value="1" id="endtime" style="width:54px;"></td>
+	  <td><input type=number value="100" id="steptime" style="width:54px;"></td>
+	</tr>
+	<tr><td height=2></td></tr>
+	<tr align=center style="font-size: 8px;color:black;">
+	  <td colspan=2>Options</td>
+	  <td>Latency</td>
+	</tr>
+	<tr align=center style="font-size: 8px;color:black;">
+	  <td colspan=2 align=center><select id="optionsettings" onchange="setoption(this.value)" style="width:140px;">
+		<option value="displaysensor,sensors">All Sensors</option>
+		<option value="displaysensor,internal">Internal Sensors Only</option>
+		<option value="displaysensor,edge">Show Edge Sensors</option><option value="displaysensor,active">Active Sensors Only</option>
+		<option value="vron">VR viewing ON</option>
+		<option value="vroff">VR viewing OFF</option>
+		<option value="displaystyle,single">No Sizing</option>
+		<option value="displaystyle,count">Set Size to Count</option>
+		<option value="displaystyle,charge">Set Size to Charge</option>
+		</select></td>
+	  <td><select id="latencycount" value='100' style="width:64px;"><option value='1'>1 cycle</option><option value='2'>2 cycle</option><option value='5'>5 cycles</option><option value='10'>10 cycles</option><option value='20'>20 cycles</option>
+	     <option value='50'>50 cycles</option><option selected value='100'>100 cycles</option><option value='200'>200 cycles</option><option value='500'>500 cycles</option><option value='1000'>1000 cycles</option><option value='99999999'>∞ cycles</option>
+	     </td>
+	  <td></td>
+	</tr>
+	<tr><td height=2></td></tr>
+	<tr align=center style="font-size: 8px;color:black;"><td colspan=4>Events by number of strings affected</td></tr>
+	<tr align=center style="font-size: 8px;color:black;"><td colspan=4><select onchange="icecubedropdown(this.value)">
+		<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>
+		<option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="0">>9</option>
+		</select>&nbsp;&nbsp;<span id="eventdropdown"</span></td></tr>
+	<tr><td height=4></td></tr>
+	<tr align=center style="font-size: 18px;color:black;">
+	  <td colspan=6><span class=mainbutton onclick="icecuberun()"><u>Run</u></span>&nbsp;<span class=mainbutton onclick="icecubestop()"><u>Stop</u></span>&nbsp;<span class=mainbutton onclick="icecubestep()"><u>Step</u></span>&nbsp;<span class=mainbutton onclick="icecuberestart()"><u>Reset</u></span>&nbsp;&nbsp;</td></tr>
+	<tr><td height=4></td></tr>
+     </table><center>
+     <div style='height:1px'></div>
+     <table style="font-size: 12px;" cellpadding=4><tr align=center><td><span class=littlebutton onclick="icecubeicecube()">&nbsp;<u>IceCube</u>&nbsp;</span></td><td><span class=littlebutton onclick="icecubepulses()">&nbsp;<u>Pulses</u>&nbsp;</span></td><td><span class=littlebutton onclick="icecubehits()">&nbsp;<u>Santa</u>&nbsp;</span></td><td><span class=littlebutton onclick="icecubematches()">&nbsp;<u>Msanta</u>&nbsp;</span></td></tr></table>
+
+    <div id="fancystuff" style="display:none;">
+    </div>
+    <div id="icecubestuff" style="display:inline">
+    <div style="height:1px"></div>
+    <div style="position:relative;">
+	<img id="icecubepic" width=240 style="display:none;position:relative;left:0;top:0;border-radius:8px" src="https://crumbsoftware.com:3028/images/icecubepic.jpg">
+	<video controls autoplay class="video" id="video" onended="videodone()" style="min-height:180px;width:240px;border-radius:8px" pooster="videos/soulmachine/qubit1.jpg">
+	  <source src="videos/soulmachine/icecube_intro.mp4" type="video/mp4"></source>
+	</video>
+    </div>
+    </div>
+    <div style="height:6px;font-size:12px"></div>
+
+    </div>
+</td></tr></table>
+</div>
+
+<script>
+function requestOrientationPermission(){
+ try {
+  DeviceOrientationEvent.requestPermission() 
+  .then(response => {
+//alert('response:'+response);
+    if (response == 'granted') {
+      window.addEventListener('deviceorientation', (event) => {
+                    // do something with e
+	devicea = event.alpha || 0;
+	deviceb = event.beta || 0;
+	deviceg = event.gamma || 0;
+//	explorecamera.rotation.y = (devicea/360)*(2*Math.PI);	// left/right
+//  controls.target = new THREE.Vector3( 0, 0, 0 );
+//explorecamera.position
+	controls.target = new THREE.Vector3( explorecamera.position.x+200, explorecamera.position.y, explorecamera.position.z );
+	controls.update();
+//  explorecamera3d.updateProjectionMatrix();
+//  explorerenderer.render(explorescene, explorecamera);
+//  if (vrviewers==2) {
+//    explorerenderer3d.render(explorescene, explorecamera3d);
+//  }
+//explorecamera.updateProjectionMatrix();	
+//controls.update();
+        var updown = (deviceg/360)*(2*Math.PI);
+        if (updown > 0) {
+//	  explorecamera.rotation.x = updown;	// up/down
+	  document.getElementById('explorecanvas').style.display='inline';
+	  document.getElementById('explorecanvas3d').style.display='inline';
+	} else {
+//	  document.getElementById('explorecanvas').style.display='none';
+//	  document.getElementById('explorecanvas3d').style.display='none';
+//	  explorecamera.rotation.z = updown;	// up/down
+//	  explorecamera.rotation.x = 1.57;	// up/down
+//	  explorecamera.rotation.y = 0;	// up/down
+	}  
+	var ststats = 'cam:'+explorecamera.rotation.x.toFixed(2)+'/'+explorecamera.rotation.y.toFixed(2)+'/'+explorecamera.rotation.z.toFixed(2);
+	ststats = ststats + ', x/y/z:'+explorecamera.position.x.toFixed(0)+'/'+explorecamera.position.y.toFixed(0)+'/'+explorecamera.position.z.toFixed(0);
+	ststats = ststats + ', device:'+devicea.toFixed(0)+'/'+deviceb.toFixed(0)+'/'+deviceg.toFixed(0);
+	ststats = ststats + ', calc:'+((devicea/360)*(2*Math.PI)).toFixed(2);
+
+        document.getElementById('icecubeinfo').innerHTML=ststats;
+	document.getElementById('buttonleft').style.border = '2px solid white';
+	document.getElementById('buttonright').style.border = '2px solid white';
+	if ((deviceb>5) && (deviceb<40)) document.getElementById('buttonleft').style.border = '2px solid red';
+	if ((deviceb<-5) && (deviceb>-40)) document.getElementById('buttonright').style.border = '2px solid red';
+	if ((deviceb>140) && (deviceb<175)) document.getElementById('buttonleft').style.border = '2px solid red';
+	if ((deviceb<-140) && (deviceb>-175)) document.getElementById('buttonright').style.border = '2px solid red';
+
+return;
+	var movechange = 0;
+	if ((deviceg>25) && (deviceg<85)) {
+	  movechange = (deviceg - 55)/5;
+	  if ((movechange<3) && (movechange>0)) movechange = 0;
+	}
+	if ((deviceg>-85) && (deviceg<-25)) {
+	  movechange = -(deviceg + 55)/5;
+	  if ((movechange>0) && (movechange<3)) movechange = 0;
+	}
+//    if ((deviceg+90)<60) if ((deviceg+90)>0) movechange = -((deviceg+90)/120)*(2*Math.PI)+1;
+//    if ((deviceg+90)<60) if ((deviceg+90)>30) movechange = ((deviceg+90)/360)*(2*Math.PI);
+//    if ((deviceg)<-30) if ((deviceg)>-60) movechange = ((deviceg+90)/360)*(2*Math.PI);
+	explorecamera.position.z += (movechange)*1*Math.cos(explorecamera.rotation.y);
+	explorecamera.position.x += (movechange)*1*Math.sin(explorecamera.rotation.y);
+      })
+    }
+  }) 
+  .catch(console.error);
+ } catch {
+  console.log('DeviceOrientationEvent.requestPermission() not valid');
+ } finally {}
+  
+}
+function clickwake() {
+alert(document.getElementById('wakebutton'));
+  document.getElementById('wakebutton').click();
+}
+
+document.addEventListener("orientationchange", function(event){
+alert(window.orientation);
+    switch(window.orientation) 
+    {  
+        case -90: case 90:
+            /* Device is in landscape mode */
+            break; 
+        default:
+            /* Device is in portrait mode */
+    }
+});
+function enablewake() {
+  if (window.location.search.toUpperCase().indexOf('VR=TRUE')>=0) {
+    document.getElementById('dashboarddisplayoff').style.display='inline';
+    document.getElementById('dashboarddisplay').style.display='none';
+    document.getElementById('buttonleft').style.display='inline';
+    document.getElementById('buttonright').style.display='inline';
+    vrviewers=2;
+    requestOrientationPermission();
+//    explorecamera.position.set(0,-2000,1000);	// up/down
+    document.getElementById('wakewindow').style.display='none';
+    resize();
+//deviceorientation
+  }
+}
+
+function loaddone() {
+//requestWakeLock();
+//  enablewake();
+//  setTimeout(clickwake, 5000)
+//  explorecamera.position.set(0,-2000,1000);	// rotate
+
+  if (window.location.search.toUpperCase().indexOf('VR=TRUE')>=0) document.getElementById( 'wakewindow').style.display='inline';
+  var light = new THREE.AmbientLight( 0x808080 ); // soft white light
+  explorescene.add( light );
+  var flashLight1 = new THREE.PointLight( 0xffffff, 0.6 );
+  explorecamera.add( flashLight1 );
+
+  var pointermaterial = new THREE.MeshPhongMaterial( { color: 0xff0000} );
+  var pointergeometry = new THREE.SphereGeometry(16, 16, 8);
+  var pointer = new THREE.Mesh( pointergeometry, pointermaterial);
+  pointer.position.set(0,0,-1250);
+  explorecamera.add(pointer);
+  explorerenderer.setClearColor( 0xffffff ); 
+  var explorecontainer = document.getElementById( 'explorecanvas' );
+  var explorecontainer3d = document.getElementById( 'explorecanvas3d' );
+  explorecontainer.appendChild( explorerenderer.domElement );
+  explorecontainer.appendChild( explorerenderer3d.domElement );
+
+  buildicecube();
+  resize();
+  icecubeget('13670');
+}
+function resize() {
+  explorerenderer.setSize( (window.innerWidth/vrviewers), (window.innerHeight) );
+  explorecamera.aspect = (window.innerWidth/vrviewers) / (window.innerHeight);
+  explorecamera.updateProjectionMatrix();
+  explorerenderer3d.setSize( (window.innerWidth/vrviewers), (window.innerHeight) );
+  explorecamera3d.aspect = (window.innerWidth/vrviewers) / (window.innerHeight);
+  explorecamera3d.updateProjectionMatrix();
+  explorerenderer.render(explorescene, explorecamera);
+  if (vrviewers==2) {
+    explorerenderer3d.render(explorescene, explorecamera3d);
+//    controls.enableRotate = false;
+  }
+  controls.target = new THREE.Vector3( 0, 0, 0 );
+//explorecamera.up.set(1, 0, 0);
+}
+
+function videodone() {
+//const cancellFullScreen = document.exitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen || document.msExitFullscreen;
+//cancellFullScreen.call(document);
+
+  document.getElementById('video').style.display='none';
+  document.getElementById('icecubepic').style.display='inline';
+}
+
+function dashboarddisplayon() {
+  document.getElementById('dashboarddisplayoff').style.display='none';
+  document.getElementById('dashboarddisplay').style.display='inline';
+}
+function dashboarddisplayoff() {
+  document.getElementById('dashboarddisplay').style.display='none';
+  document.getElementById('dashboarddisplayoff').style.display='inline';
+}
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length,c.length);
+        }
+    }
+    return "";
+}
+</script>
+
+	</body>
+</html>
