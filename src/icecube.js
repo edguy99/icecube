@@ -399,6 +399,8 @@ return;
 //  socket.emit('icecube get event', stevent, wantall, 'IceCube Online');
 }
 function icecubetestget(stevent) {
+alert("Sorry, no database connection establisted at this time...");
+return;
   if (stevent=='') {
     stevent = prompt('Event number#','');
     if (stevent=='') return;
