@@ -385,6 +385,8 @@ function eventsearch() {
   })
 /*
 function icecubeget(stevent) {
+alert("Sorry, no database connection establisted at this time...");
+return;
   if (stevent=='') {
     stevent = prompt('Event number#','');
     if (stevent=='') return;
