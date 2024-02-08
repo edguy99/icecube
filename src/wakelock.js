@@ -1,4 +1,3 @@
-console.clear();
 var wakeButton;
 
 function enablewake() {
