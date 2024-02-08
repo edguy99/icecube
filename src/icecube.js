@@ -343,6 +343,8 @@ function icecubeshowframe() {
 }
   var framenum=0;
 function eventqueryshow() {
+alert("Sorry, database connection not active, please try again later..");
+return;
   document.getElementById('eventinfodisplay').style.display = 'none';
   document.getElementById('eventquerydisplay').style.display = 'inline';
 }
