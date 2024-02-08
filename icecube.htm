@@ -344,8 +344,14 @@ function loaddone() {
   buildicecube();
   resize();
   initevent(stlines);
+    icecuberestart();
+    icecubedata();
+    icecubeicecube();
   icecuberun();
 //  icecubeget('13670');
+
+
+	
 }
 function resize() {
   explorerenderer.setSize( (window.innerWidth/vrviewers), (window.innerHeight) );
