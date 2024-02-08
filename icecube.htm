@@ -27,6 +27,8 @@
 <script src="src/orbitcontrols.js"></script>
 <script src="src/wakelock.js"></script>
 <script src="src/icecube.js"></script>
+<script src="src/buildlab.js"></script>
+<script src="src/buildicecube.js"></script>
 
 <body onload="loaddone()" onresize="resize()"; style="margin:0px;padding:0px;overflow:hidden">
 
@@ -342,6 +344,7 @@ function loaddone() {
   explorecontainer.appendChild( explorerenderer3d.domElement );
 
   buildicecube();
+  buildlab();
   resize();
   initevent(stlines);
     icecuberestart();
