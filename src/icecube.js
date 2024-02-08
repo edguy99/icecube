@@ -385,7 +385,7 @@ function eventsearch() {
     if (eventlist.length>99) steventlist = steventlist+'&nbsp;&nbsp;&nbsp;and more ...';
     document.getElementById('eventsearchdisplay').innerHTML = steventlist;
   })
-/*
+*/
 function icecubeget(stevent) {
 alert("Sorry, no database connection establisted at this time...");
 return;
