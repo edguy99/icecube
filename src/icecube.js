@@ -1,4 +1,4 @@
-var socket = io();
+//var socket = io();
 var explorecamera = new THREE.PerspectiveCamera( 75, (window.innerWidth) / (window.innerHeight), 0.1, 50000 );
 var explorecamera3d = new THREE.PerspectiveCamera( 75, (window.innerWidth) / (window.innerHeight), 0.1, 50000 );
 var explorescene = new THREE.Scene();
@@ -357,11 +357,12 @@ function eventqueryget() {
 function eventsearch() {
   var stlow = document.getElementById('eventsearchlow').value;
   var sthigh = document.getElementById('eventsearchhigh').value;
-  socket.emit('icecube get eventlist', stlow, sthigh);
+//  socket.emit('icecube get eventlist', stlow, sthigh);
   document.getElementById('eventquerydisplay').style.display = 'none';
   document.getElementById('eventinfodisplay').style.display = 'none';
   document.getElementById('eventcover').style.display = 'inline';
 }
+/*
   socket.on('icecube eventlist', function (eventlist) {
     document.getElementById('eventquerydisplay').style.display = 'inline';
     document.getElementById('eventinfodisplay').style.display = 'none';
@@ -382,6 +383,7 @@ function eventsearch() {
     if (eventlist.length>99) steventlist = steventlist+'&nbsp;&nbsp;&nbsp;and more ...';
     document.getElementById('eventsearchdisplay').innerHTML = steventlist;
   })
+/*
 function icecubeget(stevent) {
   if (stevent=='') {
     stevent = prompt('Event number#','');
@@ -392,7 +394,7 @@ function icecubeget(stevent) {
   document.getElementById('eventcover').style.display = 'inline';
   document.getElementById('eventactivity').innerHTML = 'Selecting event<br>'+stevent;
   var wantall = document.getElementById('auxiliary').checked;
-  socket.emit('icecube get event', stevent, wantall, 'IceCube Online');
+//  socket.emit('icecube get event', stevent, wantall, 'IceCube Online');
 }
 function icecubetestget(stevent) {
   if (stevent=='') {
@@ -404,8 +406,9 @@ function icecubetestget(stevent) {
   document.getElementById('eventcover').style.display = 'inline';
   document.getElementById('eventactivity').innerHTML = 'Selecting event<br>'+stevent;
   var wantall = document.getElementById('auxiliary').checked;
-  socket.emit('icecube get test event', stevent, wantall);
+//  socket.emit('icecube get test event', stevent, wantall);
 }
+/*
   socket.on('icecube event not found', function (stevent) {
     alert(stevent+' not found');
     document.getElementById('eventcover').style.display = 'none';
@@ -429,6 +432,7 @@ console.log(JSON.stringify(eventmeta));
     icecubeicecube();
     runstatus  = 'running';
   });
+  */
 function icecuberestart() {
   clearInterval(spinner); 
   for (var i=0;i<6000;i++) sensorhits[i]=0;
