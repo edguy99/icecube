@@ -322,6 +322,12 @@ function loaddone() {
 //  enablewake();
 //  setTimeout(clickwake, 5000)
 //  explorecamera.position.set(0,-2000,1000);	// rotate
+  indentcanvas = document.getElementById("indentcanvas");
+  indentcanvas.height=220;
+  indentcanvas.width=240;
+  var indentctx = indentcanvas.getContext("2d");
+  indentctx.fillStyle = "#FFFFFF";
+  indentctx.fillRect(0, 0, 240, 220);
 
   if (window.location.search.toUpperCase().indexOf('VR=TRUE')>=0) document.getElementById( 'wakewindow').style.display='inline';
   var light = new THREE.AmbientLight( 0x808080 ); // soft white light
