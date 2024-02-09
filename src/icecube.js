@@ -7,7 +7,7 @@ const explorerenderer = new THREE.WebGLRenderer();
 const explorerenderer3d = new THREE.WebGLRenderer();
 var controls = new THREE.OrbitControls( explorecamera,explorerenderer.domElement );
 var indentcanvas;
-
+var indentctx;
 var spinner;
 var vrviewers = 1;
   var ground;
