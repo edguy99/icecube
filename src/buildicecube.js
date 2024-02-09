@@ -11,7 +11,7 @@ function buildicecube() {
 
   var groundgeometry = new THREE.BoxGeometry( 1500, 10, 1500 );
   var groundmaterial =  new THREE.MeshPhongMaterial( {color: 0xffffff}  );
-  var ground = new THREE.Mesh( groundgeometry, groundmaterial );
+  ground = new THREE.Mesh( groundgeometry, groundmaterial );
   explorescene.add( ground );
   ground.position.set(0,540,0);
   if (vrviewers==2) {
