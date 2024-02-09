@@ -9,7 +9,7 @@ var controls = new THREE.OrbitControls( explorecamera,explorerenderer.domElement
 
 var spinner;
 var vrviewers = 1;
-  var ground
+  var ground;
   var icubecenter;
   var sensorarray = [];
   var eventdata;
