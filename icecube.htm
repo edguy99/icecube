@@ -325,11 +325,9 @@ function loaddone() {
   indentcanvas = document.getElementById("indentcanvas");
   indentcanvas.height=220;
   indentcanvas.width=240;
-	console.log(indentctx);
   indentctx = indentcanvas.getContext("2d");
   indentctx.fillStyle = "#FFFFFF";
   indentctx.fillRect(0, 0, 240, 220);
-	console.log(indentctx);
 
   if (window.location.search.toUpperCase().indexOf('VR=TRUE')>=0) document.getElementById( 'wakewindow').style.display='inline';
   var light = new THREE.AmbientLight( 0x808080 ); // soft white light
