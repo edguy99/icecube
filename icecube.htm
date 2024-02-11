@@ -30,7 +30,7 @@
 <script src="src/buildlab.js"></script>
 <script src="src/buildicecube.js"></script>
 
-<body onload="loaddone()" onresize="resize()"; style="margin:0px;padding:0px;overflow:hidden">
+<body onload="loaddone()" onresize=")"; style="margin:0px;padding:0px;overflow:hidden">
 
 <div id="explorecanvas" style="position:absolute;left:0px;top:0px;margin:0"></div>
 <div id="explorecanvas3d" style="z-index:-999999;position:absolute;left:0px;top:0px;height:200px"></div>
@@ -212,6 +212,9 @@
 </div>
 
 <script>
+var walkingspeed = 0;
+var elevatorspeed = 0;
+var controlstarget;
 function requestOrientationPermission(){
  try {
   DeviceOrientationEvent.requestPermission() 
@@ -223,10 +226,24 @@ function requestOrientationPermission(){
 	devicea = event.alpha || 0;
 	deviceb = event.beta || 0;
 	deviceg = event.gamma || 0;
-//	explorecamera.rotation.y = (devicea/360)*(2*Math.PI);	// left/right
-//  controls.target = new THREE.Vector3( 0, 0, 0 );
-//explorecamera.position
-	controls.target = new THREE.Vector3( explorecamera.position.x+200, explorecamera.position.y, explorecamera.position.z );
+	document.getElementById('buttonleft').style.border = '2px solid white';
+	document.getElementById('buttonright').style.border = '2px solid white';
+	if ((deviceb<-10) && (deviceb>-40)) {
+	  document.getElementById('buttonleft').style.border = '2px solid red';
+	  walkingspeed = 0;
+	  if ((deviceg<60) && (deviceg>20)) walkingspeed = (60-deviceg)/2;
+	  if ((deviceg<100) && (deviceg>80)) walkingspeed = (80-deviceg)/2;
+	} else if ((deviceb>10) && (deviceb<40)) {
+	  document.getElementById('buttonright').style.border = '2px solid red';
+	  elevatorspeed = 0;
+	  if ((deviceg<60) && (deviceg>20)) elevatorspeed = -(60-deviceg)/4;
+	  if ((deviceg<100) && (deviceg>80)) elevatorspeed = -(80-deviceg)/4;
+	} else {
+	  walkingspeed = 0;
+	  elevatorspeed = 0;
+	}
+	controlstarget = new THREE.Vector3( explorecamera.position.x+100*Math.cos((devicea/360)*(2*Math.PI)), explorecamera.position.y-100*Math.cos((deviceg/360)*(2*Math.PI)), explorecamera.position.z-100*Math.sin((devicea/360)*(2*Math.PI)) );
+	controls.target = controlstarget;
 	controls.update();
 //  explorecamera3d.updateProjectionMatrix();
 //  explorerenderer.render(explorescene, explorecamera);
@@ -246,19 +263,14 @@ function requestOrientationPermission(){
 //	  explorecamera.rotation.z = updown;	// up/down
 //	  explorecamera.rotation.x = 1.57;	// up/down
 //	  explorecamera.rotation.y = 0;	// up/down
-	}  
+	}   
 	var ststats = 'cam:'+explorecamera.rotation.x.toFixed(2)+'/'+explorecamera.rotation.y.toFixed(2)+'/'+explorecamera.rotation.z.toFixed(2);
 	ststats = ststats + ', x/y/z:'+explorecamera.position.x.toFixed(0)+'/'+explorecamera.position.y.toFixed(0)+'/'+explorecamera.position.z.toFixed(0);
+	ststats = ststats + '<br>target:'+controlstarget.x.toFixed(0)+'/'+controlstarget.y.toFixed(0)+'/'+controlstarget.z.toFixed(0);
 	ststats = ststats + ', device:'+devicea.toFixed(0)+'/'+deviceb.toFixed(0)+'/'+deviceg.toFixed(0);
-	ststats = ststats + ', calc:'+((devicea/360)*(2*Math.PI)).toFixed(2);
+	ststats = ststats + '<br>calc:'+((devicea/360)*(2*Math.PI)).toFixed(2);
 
         document.getElementById('icecubeinfo').innerHTML=ststats;
-	document.getElementById('buttonleft').style.border = '2px solid white';
-	document.getElementById('buttonright').style.border = '2px solid white';
-	if ((deviceb>5) && (deviceb<40)) document.getElementById('buttonleft').style.border = '2px solid red';
-	if ((deviceb<-5) && (deviceb>-40)) document.getElementById('buttonright').style.border = '2px solid red';
-	if ((deviceb>140) && (deviceb<175)) document.getElementById('buttonleft').style.border = '2px solid red';
-	if ((deviceb<-140) && (deviceb>-175)) document.getElementById('buttonright').style.border = '2px solid red';
 
 return;
 	var movechange = 0;
@@ -367,7 +379,7 @@ function resize() {
   explorerenderer.render(explorescene, explorecamera);
   if (vrviewers==2) {
     explorerenderer3d.render(explorescene, explorecamera3d);
-//    controls.enableRotate = false;
+    controls.enableRotate = false;
   }
   controls.target = new THREE.Vector3( 0, 0, 0 );
 //explorecamera.up.set(1, 0, 0);
