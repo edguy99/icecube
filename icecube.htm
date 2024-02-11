@@ -294,11 +294,7 @@ function enablevr() {
 }
 
 function loaddone() {
-//requestWakeLock();
   enablewake();
-	alert('enablewake');
-//  setTimeout(clickwake, 5000)
-//  explorecamera.position.set(0,-2000,1000);	// rotate
   indentcanvas = document.getElementById("indentcanvas");
   indentcanvas.height=220;
   indentcanvas.width=240;
@@ -327,14 +323,10 @@ function loaddone() {
   buildlab();
   resize();
   initevent(stlines);
-    icecuberestart();
-    icecubedata();
-    icecubeicecube();
+  icecuberestart();
+  icecubedata();
+  icecubeicecube();
   icecuberun();
-//  icecubeget('13670');
-
-
-	
 }
 function resize() {
   explorerenderer.setSize( (window.innerWidth/vrviewers), (window.innerHeight) );
@@ -353,9 +345,6 @@ function resize() {
 }
 
 function videodone() {
-//const cancellFullScreen = document.exitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen || document.msExitFullscreen;
-//cancellFullScreen.call(document);
-
   document.getElementById('video').style.display='none';
   document.getElementById('icecubepic').style.display='inline';
 }
