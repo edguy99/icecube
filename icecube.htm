@@ -285,7 +285,17 @@ function enablevr() {
     document.getElementById('buttonright').style.display='inline';
     vrviewers=2;
     requestOrientationPermission();
-    requestWakeLock();
+const requestWakeLock = async () => {
+  try {
+    const wakeLock = await navigator.wakeLock.request("screen");
+  } catch (err) {
+    // The wake lock request fails - usually system-related, such as low battery.
+
+    console.log(`${err.name}, ${err.message}`);
+  }
+};
+
+requestWakeLock();
 //    explorecamera.position.set(0,-2000,1000);	// up/down
     document.getElementById('wakewindow').style.display='none';
     resize();
@@ -294,7 +304,6 @@ function enablevr() {
 }
 
 function loaddone() {
-  enablewake();
   indentcanvas = document.getElementById("indentcanvas");
   indentcanvas.height=220;
   indentcanvas.width=240;
