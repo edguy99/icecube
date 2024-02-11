@@ -245,48 +245,13 @@ function requestOrientationPermission(){
 	controlstarget = new THREE.Vector3( explorecamera.position.x+100*Math.cos((devicea/360)*(2*Math.PI)), explorecamera.position.y-100*Math.cos((deviceg/360)*(2*Math.PI)), explorecamera.position.z-100*Math.sin((devicea/360)*(2*Math.PI)) );
 	controls.target = controlstarget;
 	controls.update();
-//  explorecamera3d.updateProjectionMatrix();
-//  explorerenderer.render(explorescene, explorecamera);
-//  if (vrviewers==2) {
-//    explorerenderer3d.render(explorescene, explorecamera3d);
-//  }
-//explorecamera.updateProjectionMatrix();	
-//controls.update();
-        var updown = (deviceg/360)*(2*Math.PI);
-        if (updown > 0) {
-//	  explorecamera.rotation.x = updown;	// up/down
-	  document.getElementById('explorecanvas').style.display='inline';
-	  document.getElementById('explorecanvas3d').style.display='inline';
-	} else {
-//	  document.getElementById('explorecanvas').style.display='none';
-//	  document.getElementById('explorecanvas3d').style.display='none';
-//	  explorecamera.rotation.z = updown;	// up/down
-//	  explorecamera.rotation.x = 1.57;	// up/down
-//	  explorecamera.rotation.y = 0;	// up/down
-	}   
+
 	var ststats = 'cam:'+explorecamera.rotation.x.toFixed(2)+'/'+explorecamera.rotation.y.toFixed(2)+'/'+explorecamera.rotation.z.toFixed(2);
 	ststats = ststats + ', x/y/z:'+explorecamera.position.x.toFixed(0)+'/'+explorecamera.position.y.toFixed(0)+'/'+explorecamera.position.z.toFixed(0);
 	ststats = ststats + '<br>target:'+controlstarget.x.toFixed(0)+'/'+controlstarget.y.toFixed(0)+'/'+controlstarget.z.toFixed(0);
 	ststats = ststats + ', device:'+devicea.toFixed(0)+'/'+deviceb.toFixed(0)+'/'+deviceg.toFixed(0);
 	ststats = ststats + '<br>calc:'+((devicea/360)*(2*Math.PI)).toFixed(2);
-
         document.getElementById('icecubeinfo').innerHTML=ststats;
-
-return;
-	var movechange = 0;
-	if ((deviceg>25) && (deviceg<85)) {
-	  movechange = (deviceg - 55)/5;
-	  if ((movechange<3) && (movechange>0)) movechange = 0;
-	}
-	if ((deviceg>-85) && (deviceg<-25)) {
-	  movechange = -(deviceg + 55)/5;
-	  if ((movechange>0) && (movechange<3)) movechange = 0;
-	}
-//    if ((deviceg+90)<60) if ((deviceg+90)>0) movechange = -((deviceg+90)/120)*(2*Math.PI)+1;
-//    if ((deviceg+90)<60) if ((deviceg+90)>30) movechange = ((deviceg+90)/360)*(2*Math.PI);
-//    if ((deviceg)<-30) if ((deviceg)>-60) movechange = ((deviceg+90)/360)*(2*Math.PI);
-	explorecamera.position.z += (movechange)*1*Math.cos(explorecamera.rotation.y);
-	explorecamera.position.x += (movechange)*1*Math.sin(explorecamera.rotation.y);
       })
     }
   }) 
