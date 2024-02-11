@@ -7,3 +7,7 @@ Help to build the icecube lab. Currently we have a green building with a couple 
 
 # How to move around ...
 Use the mouse buttons to look around (hold the left button down) or to move around (hold the right button down). You can zoom in with the center wheel. Also, the arrow keys (left/right/up/down) move you around very nicely. On touch screens, one finger to look around, two fingers to move or zoom.
+
+# VR Viewing ...
+Select "ENABLE VR HEADSET" to explore the virtual icecube using the link below:
+https://raw.githack.com/edguy99/icecube/main/icecube.htm?vr=true
