@@ -90,6 +90,11 @@ function icecubedropdown(ststrings) {
 }
 
 function animate() {
+  if (walkingspeed !=0 ) {
+    explorecamera.position.x = explorecamera.position.x + walkingspeed*Math.cos((devicea/360)*(2*Math.PI));
+    explorecamera.position.z = explorecamera.position.z - walkingspeed*Math.sin((devicea/360)*(2*Math.PI));
+  }
+  if (elevatorspeed !=0 ) explorecamera.position.y = explorecamera.position.y + elevatorspeed;
   explorerenderer.render(explorescene, explorecamera);
   if (vrviewers==2) explorerenderer3d.render(explorescene, explorecamera3d);
   requestAnimationFrame( animate );
