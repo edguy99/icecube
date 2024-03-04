@@ -313,22 +313,12 @@ function icecubeget(stevent) {
   var wantall = document.getElementById('auxiliary').checked;
   var data = "";
 	
-fetch(url, {  
-    method: 'POST',  
-    headers: {  
-      'auth': '1234'  
-    },  
-     body: JSON.stringify({
-    name: 'dean',
-    login: 'dean',
-  })
+fetch('https://crumbsoftware.com:3028/welcome.htm')
+.then(response => response.json())
+.then(data => {
+  console.log(data) // Prints result from `response.json()` in getRequest
 })
-.then(function (data) {  
-  console.log('Request success: ', data);  
-})  
-.catch(function (error) {  
-  console.log('Request failure: ', error);  
-});
+.catch(error => console.error(error))
 
 
 }
