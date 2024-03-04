@@ -1,8 +1,3 @@
-var http = require('http');
-var https = require('https');
-var url = require('url');
-var QS = require('querystring');
-
 //var socket = io();
 var explorecamera = new THREE.PerspectiveCamera( 75, (window.innerWidth) / (window.innerHeight), 0.1, 50000 );
 var explorecamera3d = new THREE.PerspectiveCamera( 75, (window.innerWidth) / (window.innerHeight), 0.1, 50000 );
@@ -317,28 +312,25 @@ function icecubeget(stevent) {
   document.getElementById('eventactivity').innerHTML = 'Selecting event<br>'+stevent;
   var wantall = document.getElementById('auxiliary').checked;
   var data = "";
-  var options = {host: 'www.domuswindows.net', port: 3025, path: '/getevent-'+stevent+'-'+wantall, method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': data.length,
-	    'data': data
-        },
-  };
-  var req = https.request(options, function (res) {
-        res.setEncoding('utf8');
-        var stdata='';
-        res.on('data', function (chunk) {
-	  stdata=stdata+chunk;
-        });
-        res.on('end', function () {
-	  clog("EventData:" + stdata.substr(0,32));
-        });
-  });
-  req.write(data);
-  req.end();
-  req.on('error',function(err) {
-	socket.emit('get branches failed'); 
-  });
+	
+fetch(url, {  
+    method: 'POST',  
+    headers: {  
+      'auth': '1234'  
+    },  
+     body: JSON.stringify({
+    name: 'dean',
+    login: 'dean',
+  })
+})
+.then(function (data) {  
+  console.log('Request success: ', data);  
+})  
+.catch(function (error) {  
+  console.log('Request failure: ', error);  
+});
+
+
 }
 function icecubetestget(stevent) {
   if (stevent=='') {
