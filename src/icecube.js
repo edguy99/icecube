@@ -315,7 +315,7 @@ function icecubeget(stevent) {
   var options = {host: 'www.domuswindows.net', port: 3025, path: '/getevent-'+stevent+'-'+wantall, method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': Buffer.byteLength(data),
+            'Content-Length': data.length,
 	    'data': data
         },
   };
