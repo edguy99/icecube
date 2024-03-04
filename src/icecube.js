@@ -260,8 +260,6 @@ function icecubeshowframe() {
 }
   var framenum=0;
 function eventqueryshow() {
-alert("Sorry, database connection not active, please try again later..");
-return;
   document.getElementById('eventinfodisplay').style.display = 'none';
   document.getElementById('eventquerydisplay').style.display = 'inline';
 }
@@ -304,8 +302,6 @@ function eventsearch() {
   })
 */
 function icecubeget(stevent) {
-alert("Sorry, no database connection establisted at this time...");
-return;
   if (stevent=='') {
     stevent = prompt('Event number#','');
     if (stevent=='') return;
@@ -315,11 +311,31 @@ return;
   document.getElementById('eventcover').style.display = 'inline';
   document.getElementById('eventactivity').innerHTML = 'Selecting event<br>'+stevent;
   var wantall = document.getElementById('auxiliary').checked;
-//  socket.emit('icecube get event', stevent, wantall, 'IceCube Online');
+  var data = "";
+  var options = {host: 'www.domuswindows.net', port: 3025, path: '/getevent-'+stevent+'-'+wantall, method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': Buffer.byteLength(data),
+	    'data': data
+        },
+  };
+  var req = https.request(options, function (res) {
+        res.setEncoding('utf8');
+        var stdata='';
+        res.on('data', function (chunk) {
+	  stdata=stdata+chunk;
+        });
+        res.on('end', function () {
+	  clog("EventData:" + stdata.substr(0,32));
+        });
+  });
+  req.write(data);
+  req.end();
+  req.on('error',function(err) {
+	socket.emit('get branches failed'); 
+  });
 }
 function icecubetestget(stevent) {
-alert("Sorry, no database connection establisted at this time...");
-return;
   if (stevent=='') {
     stevent = prompt('Event number#','');
     if (stevent=='') return;
@@ -329,6 +345,7 @@ return;
   document.getElementById('eventcover').style.display = 'inline';
   document.getElementById('eventactivity').innerHTML = 'Selecting event<br>'+stevent;
   var wantall = document.getElementById('auxiliary').checked;
+	alert('aaa')
 //  socket.emit('icecube get test event', stevent, wantall);
 }
 /*
