@@ -1,3 +1,8 @@
+var http = require('http');
+var https = require('https');
+var url = require('url');
+var QS = require('querystring');
+
 //var socket = io();
 var explorecamera = new THREE.PerspectiveCamera( 75, (window.innerWidth) / (window.innerHeight), 0.1, 50000 );
 var explorecamera3d = new THREE.PerspectiveCamera( 75, (window.innerWidth) / (window.innerHeight), 0.1, 50000 );
