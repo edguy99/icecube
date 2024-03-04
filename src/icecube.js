@@ -312,15 +312,12 @@ function icecubeget(stevent) {
   document.getElementById('eventactivity').innerHTML = 'Selecting event<br>'+stevent;
   var wantall = document.getElementById('auxiliary').checked;
   var data = "";
-	
-fetch('https://crumbsoftware.com:3028/welcome.htm')
-.then(response => response.json())
-.then(data => {
-  console.log(data) // Prints result from `response.json()` in getRequest
-})
-.catch(error => console.error(error))
-
-
+  fetch('https://crumbsoftware.com:3028/eventwanted-'+stevent+'-'+wantall)
+	.then(response => response.json())
+	.then(data => {
+	  console.log(data) // Prints result from 'response.json()' in getRequest
+	})
+  .catch(error => console.error(error))
 }
 function icecubetestget(stevent) {
   if (stevent=='') {
