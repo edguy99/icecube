@@ -312,7 +312,8 @@ function icecubeget(stevent) {
   document.getElementById('eventactivity').innerHTML = 'Selecting event<br>'+stevent;
   var wantall = document.getElementById('auxiliary').checked;
   var data = "";
-  fetch('https://crumbsoftware.com:3028/eventwanted-'+stevent+'-'+wantall)
+  fetch('https://crumbsoftware.com:3028/eventwanted-'+stevent+'-'+wantall, {
+        mode: 'no-cors'})
 	.then(response => response.json())
 	.then(data => {
 	  console.log(data) // Prints result from 'response.json()' in getRequest
