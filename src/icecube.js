@@ -313,15 +313,22 @@ function icecubeget(stevent) {
   var wantall = document.getElementById('auxiliary').checked;
   var data = "";
   fetch('https://crumbsoftware.com:3028/eventwanted-'+stevent+'-'+wantall, {
-        method: 'POST', mode: 'no-cors'})
-	.then(response => {
-		console.log('-----');
-		console.log(response);
-	})
-	.then(data => {
-	  console.log(data) // Prints result from 'response.json()' in getRequest
-	})
-  .catch(error => console.error(error))
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify('')
+    })
+    .then(response => response.json())
+    .then(function(response) {
+        if (response.ok) {
+            console.log('got data: ', response.data);
+        }
+        throw new Error('Request failed.');
+    })
+    .catch(function(error) {
+        console.log(error);
+    });
 }
 function icecubetestget(stevent) {
   if (stevent=='') {
