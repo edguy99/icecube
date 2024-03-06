@@ -322,8 +322,9 @@ function icecubeget(stevent) {
         Body: JSON.stringify({name:'ed'})
     })
     .then(response => {
-	    console.log('-----');
 	    console.log(response.ok);
+	    console.log('-----');
+	    console.log(response);
 	    console.log('-----');
 //	    response.json();
     })
