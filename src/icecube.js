@@ -318,7 +318,7 @@ function icecubeget(stevent) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify('')
+        body: JSON.stringify({name:'ed'})
     })
     .then(response => response.json())
     .then(function(response) {
