@@ -320,7 +320,14 @@ function icecubeget(stevent) {
         },
         body: JSON.stringify({name:'ed'})
     })
-    .then(response => response.json())
+    .then(response => {
+	    console.log('-----');
+	    console.log(response.ok);
+	    console.log('-----');
+	    console.log(response.headers);
+	    console.log('-----');
+//	    response.json();
+    })
     .then(function(response) {
         if (response.ok) {
             console.log('got data: ', response.data);
