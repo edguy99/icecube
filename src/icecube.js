@@ -314,10 +314,10 @@ function icecubeget(stevent) {
   var data = "";
   fetch('https://crumbsoftware.com:3028/eventwanted-'+stevent+'-'+wantall, {
         mode: 'no-cors',
-        method: 'POST',
+        method: 'GET',
         headers: {
 		Accept: 'application.json',
-		    'Content-Type': 'application/json'
+		'Content-Type': 'application/json'
         },
         Body: JSON.stringify({name:'ed'})
     })
