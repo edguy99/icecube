@@ -313,7 +313,7 @@ function icecubeget(stevent) {
   var wantall = document.getElementById('auxiliary').checked;
   var data = "";
   fetch('https://crumbsoftware.com:3028/eventwanted-'+stevent+'-'+wantall, {
-        mode: 'no-cors'})
+        method: 'POST', mode: 'no-cors'})
 	.then(response => {
 		console.log('-----');
 		console.log(response);
