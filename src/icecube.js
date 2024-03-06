@@ -324,7 +324,11 @@ function icecubeget(stevent) {
 	    console.log('-----');
 	    console.log(response.ok);
 	    console.log('-----');
+	    console.log(response.junk);
+	    console.log('-----');
 	    console.log(response.headers);
+	    console.log('-----');
+	    console.log(response);
 	    console.log('-----');
 //	    response.json();
     })
