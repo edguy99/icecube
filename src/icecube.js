@@ -316,19 +316,14 @@ function icecubeget(stevent) {
         mode: 'no-cors',
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+		Accept: 'application.json',
+		    'Content-Type': 'application/json'
         },
-        body: JSON.stringify({name:'ed'})
+        Body: JSON.stringify({name:'ed'})
     })
     .then(response => {
 	    console.log('-----');
 	    console.log(response.ok);
-	    console.log('-----');
-	    console.log(response.junk);
-	    console.log('-----');
-	    console.log(response.headers);
-	    console.log('-----');
-	    console.log(response);
 	    console.log('-----');
 //	    response.json();
     })
