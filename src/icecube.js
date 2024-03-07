@@ -329,6 +329,8 @@ function icecubeget(stevent) {
 //	    response.json();
     })
     .then(response => function(response) {
+	    console.log(response);
+	    console.log('zzzzzzz');
         if (response.ok) {
             console.log('got data: ', response.data);
         }
