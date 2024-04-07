@@ -319,7 +319,7 @@ function icecubeget(stevent) {
 		Accept: 'application.json',
 		'Content-Type': 'application/json'
         },
-        Body: JSON.stringify({name:'ed'})
+        body: JSON.stringify({name:'ed'})
     })
     .then(response => {
 	    console.log(response.ok);
